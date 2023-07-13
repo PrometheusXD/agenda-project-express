@@ -31,12 +31,12 @@ exports.register = async (req, res) => {
 exports.editIndex = async (req, res) => {
   if (!req.params.id) return res.render('404.ejs');
 
-  const contato = new Contato(); // NOVA LINHA
-  const contatoSelect = await contato.buscaPorId(req.params.id); // SUBSTITUIÇAO DA CONST
+  const contato = new Contato();
+  const contatoSelect = await contato.buscaPorId(req.params.id);
 
   if (!contatoSelect) return res.render('404.ejs');
 
-  res.render('contato.ejs', { contato: contatoSelect }); // TROCAR A CONST AQUI TBM
+  res.render('contato.ejs', { contato: contatoSelect });
 };
 
 exports.edit = async (req, res) => {
@@ -61,4 +61,17 @@ exports.edit = async (req, res) => {
     console.log(e);
     res.render('404.ejs');
   }
+};
+
+exports.delete = async (req, res) => {
+  if (!req.params.id) return res.render('404.ejs');
+
+  const contato = new Contato();
+  const contatoSelect = await contato.delete(req.params.id);
+
+  if (!contatoSelect) return res.render('404.ejs');
+
+  req.flash('success', 'Contato apagado com sucesso.');
+  req.session.save(() => res.redirect(`/`));
+  return;
 };
